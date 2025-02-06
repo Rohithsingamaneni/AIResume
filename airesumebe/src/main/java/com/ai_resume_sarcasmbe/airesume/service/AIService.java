@@ -29,7 +29,7 @@ public class AIService {
 
 
     public Mono<String> analyzeResume(String resumeText) {
-        // ✅ Sarcastic Prompt
+        
         String sarcasticPrompt = "Oh wow, another resume! Let's see what groundbreaking skills and experience this one brings. "
                 + "Be brutally honest and give the most sarcastic feedback possible: " + resumeText;
 
@@ -39,26 +39,26 @@ public class AIService {
                 ))
         );
 
-        // ✅ Debugging: Log the request payload
+       
         System.out.println("Request Payload: " + requestBody);
 
         return webClient.post()
                 .uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + geminiApiKey)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(requestBody)  // ✅ Correct request format
+                .bodyValue(requestBody)  
                 .retrieve()
-                .bodyToMono(Map.class)  // ✅ Convert JSON response to a Map
+                .bodyToMono(Map.class)  
                 .map(response -> {
-                    // ✅ Debugging: Log raw API response
+                    
                     System.out.println("Raw API Response: " + response);
 
-                    // ✅ Extract "candidates[0].content.parts[0].text"
+                    
                     List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
                     if (candidates != null && !candidates.isEmpty()) {
                         Map<String, Object> content = (Map<String, Object>) candidates.get(0).get("content");
                         List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
                         if (parts != null && !parts.isEmpty()) {
-                            return (String) parts.get(0).get("text"); // ✅ Extracted AI-generated sarcastic feedback
+                            return (String) parts.get(0).get("text"); 
                         }
                     }
                     return "No sarcastic remarks generated... I guess the resume is just too perfect.";
